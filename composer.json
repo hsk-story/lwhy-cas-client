@@ -1,0 +1,17 @@
+{
+    "name": "hsk9044/lwhy-cas-client",
+    "description": "来玩CAS中心Laravel客户包",
+    "type": "library",
+    "authors": [
+        {
+            "name": "hsk9044",
+            "email": "qyr9044@hotmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Hsk9044\\LwhyCasClient\\": "src/"
+        }
+    }
+}
