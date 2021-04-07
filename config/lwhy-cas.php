@@ -1,7 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2021/4/6
- * Time: 17:38
- */
+
+return [
+
+    'project_code' => 'llk',
+    'secret' => 'bCQwEnbn85MGtt3A0RhEuRYuF9GF3KhS',
+    'cas_server' => 'http://192.168.66.102:8800/',
+
+];
