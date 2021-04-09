@@ -3,12 +3,22 @@
 namespace Hsk9044\LwhyCasClient\Traits;
 
 
-use App\Exceptions\BaseException;
+
+
+
+use Hsk9044\LwhyCasClient\Exceptions\CasHttpException;
+use Hsk9044\LwhyCasClient\Exceptions\CasKeyInvalidException;
 
 trait CurlClient
 {
 
 
+    /**
+     * @param $action string
+     * @param array $input
+     * @return array
+     * @throws CasHttpException
+     */
     public function post($action, $input = []) {
         $input['project_code'] = config('lwhy-cas.project_code');
         $input['timestamp'] = time();
@@ -49,10 +59,18 @@ trait CurlClient
         $res = curl_exec($ch);
         $httpCode = curl_getinfo($ch,CURLINFO_HTTP_CODE);
 
-        if($httpCode != 200) throw new BaseException("CurlError", $res);
+        $array = json_decode($res, true);
+
+        if($httpCode != 200) {
+            if($httpCode == 401) {  //说明登录失效状态
+                throw new CasKeyInvalidException($array['code']);
+            }
+
+            throw new CasHttpException($array['code'] ?? $httpCode, $array['message'] ?? "HTTP状态错误", $array['data'] ?? []);
+        }
 
         curl_close($ch);
 
-        return json_decode($res, true);
+        return $array;
     }
 }

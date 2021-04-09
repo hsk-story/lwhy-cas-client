@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 class IndexController extends Controller {
 
     public function index() {
+//        $user = Cas::make()->getCasUser("W9UBbSr9P2MYxY7dSFKDjL2gNLnwQsAE");
+//        Cas::make()->logout($user);
+//        dd($user);
 /*        $user = (new CasUser(['id'=>1, 'name'=>'哈哈哈']));
 //        $user->can('abc123');
 
