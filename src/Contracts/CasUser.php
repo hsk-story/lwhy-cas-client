@@ -27,6 +27,9 @@ class CasUser implements AuthorizableContract{
     protected $attributes = [];
     protected $token;
 
+    public $id;
+    public $name;
+
 
     public function __construct($token) {
         $this->token = $token;
@@ -36,8 +39,9 @@ class CasUser implements AuthorizableContract{
     public function put($key, $value = '') {
         if(is_array($key))
             $this->attributes = array_merge($this->attributes, $key);
-        else
+        else {
             $this->attributes[$key] = $value;
+        }
     }
 
 
@@ -91,8 +95,20 @@ class CasUser implements AuthorizableContract{
         $attributes = Cache::store(config('lwhy-cas.cache'))->get($key);
         $this->put($attributes);
 
+        $this->loadUserInfo();
+
         return true;
     }
+
+
+    public function loadUserInfo() {
+        if(isset($this->attributes['user_id']))
+            $this->id = $this->attributes['user_id'];
+
+        if(isset($this->attributes['user_name']))
+            $this->name = $this->attributes['user_name'];
+    }
+
 
     public function deleteCache() {
         $key = "cas_cache_{$this->token}";

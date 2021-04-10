@@ -45,6 +45,7 @@ class Cas
         $token = Str::random(32);
         $casUser = new CasUser($token);
         $casUser->put('user_id', $userId);
+        $casUser->put('user_name', $result['info']['name'] ?? '');
         $casUser->put('ticket', $ticket);
         $casUser->put('permissions', $result['permissions']);
         $casUser->put('roles', $result['roles']);
