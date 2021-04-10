@@ -78,6 +78,10 @@ class CasUser implements AuthorizableContract{
     }
 
 
+    public function hasRole($role) {
+        return array_search($role, $this->attributes['roles'] ?? []) !== false;
+    }
+
 
     //从缓存中获取数据
     public function load() {
