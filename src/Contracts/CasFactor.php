@@ -10,11 +10,11 @@ use Hsk9044\LwhyCasClient\Exceptions\CasKeyInvalidException;
 use Hsk9044\LwhyCasClient\Traits\CurlClient;
 use Illuminate\Support\Str;
 
-class Cas
+class CasFactor
 {
 
     /**
-     * @return Cas
+     * @return CasFactor
      */
     public static function make() {
         return new static();
@@ -28,6 +28,7 @@ class Cas
      * @param $ticket
      * @param $userId
      * @return mixed
+     * @throws CasHttpException | CasKeyInvalidException
      */
     public function authCheck($ticket, $userId) {
 //        $casUser = new CasUser("qXZmHRzvtuKRULdTruiMzLLlwI2TZpVs");
@@ -44,8 +45,8 @@ class Cas
         ]);
         $token = Str::random(32);
         $casUser = new CasUser($token);
-        $casUser->put('user_id', $userId);
-        $casUser->put('user_name', $result['info']['name'] ?? '');
+        $casUser->put('id', $userId);
+        $casUser->put('name', $result['info']['name'] ?? '');
         $casUser->put('ticket', $ticket);
         $casUser->put('permissions', $result['permissions']);
         $casUser->put('roles', $result['roles']);
@@ -61,16 +62,16 @@ class Cas
 
 
 
-    public function getCasUser($token) {
+    public function _getCasUser($token) {
         $casUser = new CasUser($token);
         $casUser->load();
 
-        if($casUser->get('update_time') + $casUser->get('auth_interval') < time()) {
+        if($casUser->get('update_time') + $casUser->get('auth_interval') < time() || true) {
             //需要去CAS服务器重新获取一下登录状态
             try{
                 $this->post('refresh', [
                     'ticket' => $casUser->get('ticket'),
-                    'id' => $casUser->get('user_id'),
+                    'id' => $casUser->get('id'),
                 ]);
             }catch (CasBaseException $e) {
                 if($e instanceof CasKeyInvalidException) {

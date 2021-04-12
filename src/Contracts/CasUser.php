@@ -8,7 +8,6 @@
 
 namespace Hsk9044\LwhyCasClient\Contracts;
 
-//use Illuminate\Auth\Authenticatable;
 use Hsk9044\LwhyCasClient\Exceptions\CasBaseException;
 use Hsk9044\LwhyCasClient\Exceptions\CasHttpException;
 use Hsk9044\LwhyCasClient\Exceptions\CasKeyInvalidException;
@@ -21,14 +20,12 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Support\Facades\Cache;
 
-class CasUser implements AuthorizableContract{
+class CasUser implements AuthorizableContract, AuthenticatableContract{
     use Authorizable;
+    use CasAuthenticatable;
 
     protected $attributes = [];
     protected $token;
-
-    public $id;
-    public $name;
 
 
     public function __construct($token) {
@@ -72,7 +69,8 @@ class CasUser implements AuthorizableContract{
         $key = "cas_cache_{$this->token}";
         $value = [
             'auth_interval' => $this->attributes['auth_interval'],
-            'user_id' => $this->attributes['user_id'],
+            'id' => $this->attributes['id'],
+            'name' => $this->attributes['name'],
             'permissions' => $this->attributes['permissions'],
             'roles' => $this->attributes['roles'],
             'ticket' => $this->attributes['ticket'],
@@ -95,19 +93,10 @@ class CasUser implements AuthorizableContract{
         $attributes = Cache::store(config('lwhy-cas.cache'))->get($key);
         $this->put($attributes);
 
-        $this->loadUserInfo();
-
         return true;
     }
 
 
-    public function loadUserInfo() {
-        if(isset($this->attributes['user_id']))
-            $this->id = $this->attributes['user_id'];
-
-        if(isset($this->attributes['user_name']))
-            $this->name = $this->attributes['user_name'];
-    }
 
 
     public function deleteCache() {

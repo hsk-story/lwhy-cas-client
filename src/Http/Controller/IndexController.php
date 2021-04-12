@@ -9,7 +9,7 @@
 namespace Hsk9044\LwhyCasClient\Http\Controller;
 
 
-use Hsk9044\LwhyCasClient\Contracts\Cas;
+use Hsk9044\LwhyCasClient\Contracts\CasFactor;
 use Hsk9044\LwhyCasClient\Contracts\CasUser;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +27,7 @@ class IndexController extends Controller {
 //        Auth::login($user);
         Auth::guard('cas')->login($user);*/
 
-        $r = Cas::make()->authCheck(request()->input('ticket'), request()->input('id'));
+        $r = CasFactor::make()->authCheck(request()->input('ticket'), request()->input('id'));
         dd($r);
     }
 
