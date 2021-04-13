@@ -8,6 +8,7 @@ use Hsk9044\LwhyCasClient\Exceptions\CasBaseException;
 use Hsk9044\LwhyCasClient\Exceptions\CasHttpException;
 use Hsk9044\LwhyCasClient\Exceptions\CasKeyInvalidException;
 use Hsk9044\LwhyCasClient\Traits\CurlClient;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
 class CasFactor
@@ -64,7 +65,9 @@ class CasFactor
 
     public function _getCasUser($token) {
         $casUser = new CasUser($token);
-        $casUser->load();
+        $loadSuccess = $casUser->load();;
+        if(!$loadSuccess)
+            return null;
 
         if($casUser->get('update_time') + $casUser->get('auth_interval') < time() || true) {
             //需要去CAS服务器重新获取一下登录状态
@@ -77,6 +80,7 @@ class CasFactor
                 if($e instanceof CasKeyInvalidException) {
                     //说明ticket已失效, 删除该token
                     $casUser->deleteCache();
+                    return null;
                 }
                 //TODO 当返回cas服务器原子锁定时候重新获取一下本地的缓存更新时间是否最新
                 throw $e;
@@ -89,6 +93,22 @@ class CasFactor
         return $casUser;
     }
 
+
+    //获取CAS登录页面地址
+    public function getLoginUrl($redirect = '') {
+        $input = [];
+        $input['tp'] = config('lwhy-cas.project_code');
+
+        if($redirect)
+            $input['redirect'] = urlencode($redirect);
+
+//        $input['timestamp'] = time();
+//        $input['sign'] = $this->getSign($input);
+
+        $url = config('lwhy-cas.cas_server') . 'redirect?' . http_build_query($input);
+
+        return $url;
+    }
 
 
     public function logout(CasUser $casUser) {

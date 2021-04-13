@@ -88,7 +88,7 @@ class CasUser implements AuthorizableContract, AuthenticatableContract{
     //从缓存中获取数据
     public function load() {
         $key = "cas_cache_{$this->token}";
-        if(!Cache::store(config('lwhy-cas.cache'))->has($key)) throw new CasKeyInvalidException("NotExists");
+        if(!Cache::store(config('lwhy-cas.cache'))->has($key)) return false;
 
         $attributes = Cache::store(config('lwhy-cas.cache'))->get($key);
         $this->put($attributes);

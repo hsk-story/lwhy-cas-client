@@ -22,18 +22,21 @@ trait CurlClient
     public function post($action, $input = []) {
         $input['project_code'] = config('lwhy-cas.project_code');
         $input['timestamp'] = time();
+        $input['sign'] = $this->getSign($input);
 
+        return $this->curl(config('lwhy-cas.cas_server') . 'cas/' . $action, $input);
+    }
+
+
+    public function getSign($input) {
         ksort($input);
         $str = "";
         foreach ($input as $k => $v) {
             $str.= $k.$v;
         }
         $restr=$str.config('lwhy-cas.secret');
-        $sign = strtoupper(md5($restr));
-        $input['sign'] = $sign;
+        return strtoupper(md5($restr));
 
-
-        return $this->curl(config('lwhy-cas.cas_server') . 'cas/' . $action, $input);
     }
 
 

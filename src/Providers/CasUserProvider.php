@@ -23,7 +23,7 @@ class CasUserProvider implements UserProvider {
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
      */
     public function retrieveById($identifier) {
-        // TODO: Implement retrieveById() method.
+        return CasFactor::make()->_getCasUser($identifier);
     }
 
     /**

@@ -80,7 +80,7 @@ class LwhyCasClientServiceProvider extends ServiceProvider
 
         config([
             'auth.guards.' . $config['guard_name'] => $config['guard'],
-            'auth.providers.cas_users' => $config['provider']
+            'auth.providers.cas' => $config['provider']
         ]);
 
     }

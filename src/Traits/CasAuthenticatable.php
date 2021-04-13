@@ -17,7 +17,7 @@ trait CasAuthenticatable
      * @return string
      */
     public function getAuthIdentifierName() {
-        return 'id';
+        return 'token';
     }
 
     /**
@@ -26,7 +26,8 @@ trait CasAuthenticatable
      * @return mixed
      */
     public function getAuthIdentifier() {
-        return $this->attributes[$this->getAuthIdentifierName()];
+        $k = $this->getAuthIdentifierName();
+        return $this->$k;
     }
 
     /**

@@ -19,7 +19,7 @@ return [
         'guard_name' => 'cas',
         'guard' => [
             'driver' => 'token',
-            'provider' => 'cas_users',
+            'provider' => 'cas',
             'hash' => false,
             'input_key' => 'api_token',
             'storage_key' => 'api_token',
