@@ -69,7 +69,8 @@ class CasFactor
         if(!$loadSuccess)
             return null;
 
-        if($casUser->get('update_time') + $casUser->get('auth_interval') < time() || true) {
+        if($casUser->get('update_time') + $casUser->get('auth_interval') < time()) {
+//            dd(4444);
             //需要去CAS服务器重新获取一下登录状态
             try{
                 $this->post('refresh', [
