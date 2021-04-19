@@ -42,7 +42,8 @@ class CasFactor
             'ticket' => $ticket,
             'id' => $userId,
             'return_menu' => 'y',
-            'return_permission' => 'y'
+            'return_permission' => 'y',
+            'return_project' => 'y',
         ]);
         $token = Str::random(32);
         $casUser = new CasUser($token);
@@ -58,6 +59,7 @@ class CasFactor
         return [
             'token' => $token,
             'nav' => $result['nav'],
+            'project' => $result['projects']
         ];
     }
 
