@@ -117,7 +117,7 @@ class CasFactor
     public function logout(CasUser $casUser) {
         $this->post('logout', [
             'ticket' => $casUser->get('ticket'),
-            'id' => $casUser->get('user_id'),
+            'id' => $casUser->get('id'),
         ]);
 
         $casUser->deleteCache();
